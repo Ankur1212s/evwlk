@@ -201,6 +201,13 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => flash.classList.remove('active'), 500);
       }
 
+      // Play Cheer Celebration Sound
+      const cheerAudio = document.getElementById('audio-celebration');
+      if (cheerAudio) {
+        cheerAudio.currentTime = 0;
+        cheerAudio.play().catch(e => console.log('Audio notice:', e));
+      }
+
       // Dramatic Confetti Burst
       launchConfetti();
 
@@ -253,12 +260,12 @@ document.addEventListener('DOMContentLoaded', () => {
         headers: { "Content-Type": "application/json", "Accept": "application/json" },
         body: JSON.stringify({
           access_key: config.web3FormsAccessKey,
-          subject: `✨ Evening Walk Confirmed with ${data.recipient}!`,
-          from_name: "Evening Walk Invite",
-          message: `Great news!\n\n${data.recipient} accepted your evening walk invitation!\n\n` +
-                   `• Rendezvous Date & Time: ${data.time}\n` +
-                   `• Preferred Spot / Note: ${data.note || 'None'}\n` +
-                   `• Confirmed at: ${data.timestamp}`
+          subject: `Walk RSVP: Confirmed with ${data.recipient}`,
+          from_name: "Evening Walk RSVP",
+          message: `Hello,\n\n${data.recipient} has accepted your evening walk invitation.\n\n` +
+                   `Date & Time: ${data.time}\n` +
+                   `Preferred Spot / Note: ${data.note || 'None'}\n` +
+                   `Timestamp: ${data.timestamp}`
         })
       }).catch(err => console.log('Web3Forms Notice:', err));
       jobs.push(emailJob);
