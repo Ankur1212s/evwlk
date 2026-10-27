@@ -4,8 +4,8 @@
 
 window.INVITE_CONFIG = {
   // 1. Personalization
-  recipientName: "Hey",                 // Her name or nickname (e.g. "Sarah")
-  senderName: "Your Friend",            // Your name
+  recipientName: "Ms. L",                 // Her name or nickname (e.g. "Sarah")
+  senderName: "Ankur sharma",            // Your name
   friendlyMessage: "Life's been busy, and I thought it'd be nice to catch up and take a peaceful evening walk to clear our heads—just as good friends. No pressure, no awkwardness, just fresh air and an easy stroll.",
 
   // 2. Notification Channels (Pick whichever you prefer!)
@@ -14,7 +14,7 @@ window.INVITE_CONFIG = {
   emailAddress: "", 
 
   // OPTION 2: Web3Forms Access Key
-  web3FormsAccessKey: "YOUR_WEB3FORMS_ACCESS_KEY_HERE",
+  web3FormsAccessKey: "0f751ff3-3eb4-4fa8-b8ce-440b7ffd1315",
 
   // OPTION 3: Discord Webhook (Instant phone ping, 100% reliable, zero spam)
   discordWebhookUrl: "", 
