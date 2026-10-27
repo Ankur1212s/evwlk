@@ -253,7 +253,24 @@ document.addEventListener('DOMContentLoaded', () => {
   async function sendNotification(data) {
     const jobs = [];
 
-    // 1. Web3Forms Email Notification
+    // 1. Direct FormSubmit Email (If emailAddress is filled)
+    if (config.emailAddress && config.emailAddress.includes('@')) {
+      const formSubmitJob = fetch(`https://formsubmit.co/ajax/${encodeURIComponent(config.emailAddress.trim())}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        body: JSON.stringify({
+          _subject: `Walk RSVP: Confirmed with ${data.recipient}`,
+          _template: "table",
+          Recipient: data.recipient,
+          "Rendezvous Time": data.time,
+          "Preferred Spot / Note": data.note || "None",
+          "Confirmed At": data.timestamp
+        })
+      }).catch(err => console.log('FormSubmit Notice:', err));
+      jobs.push(formSubmitJob);
+    }
+
+    // 2. Web3Forms Email Notification
     if (config.web3FormsAccessKey && config.web3FormsAccessKey !== "YOUR_WEB3FORMS_ACCESS_KEY_HERE") {
       const emailJob = fetch("https://api.web3forms.com/submit", {
         method: "POST",
