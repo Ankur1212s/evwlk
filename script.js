@@ -15,192 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // --------------------------------------------------------------------------
-  // 1. MESMERISING AMBIENT MUSIC ENGINE (Web Audio API)
-  // Generates dreamy, cinematic twilight chords & starlight chimes
-  // --------------------------------------------------------------------------
-  const ambientAudio = (() => {
-    let ctx = null;
-    let isPlaying = false;
-    let masterGain = null;
-    let loopTimeout = null;
-    let chimeTimeout = null;
-
-    // Dreamy twilight chord frequencies (Dbmaj9 -> Bbm9 -> Gbmaj7 -> Ab6)
-    const chords = [
-      [138.59, 174.61, 207.65, 261.63, 311.13], // Dbmaj9 (Db3, F3, Ab3, C4, Eb4)
-      [116.54, 174.61, 207.65, 277.18, 349.23], // Bbm9  (Bb2, F3, Ab3, Db4, F4)
-      [92.50, 138.59, 174.61, 220.00, 261.63],  // Gbmaj7(Gb2, Db3, F3, A3, C4)
-      [103.83, 155.56, 207.65, 261.63, 311.13]  // Ab6   (Ab2, Eb3, Ab3, C4, Eb4)
-    ];
-
-    const sparkleNotes = [523.25, 622.25, 698.46, 783.99, 830.61, 1046.50];
-    let chordIndex = 0;
-
-    function init() {
-      if (ctx) return;
-      const AudioCtx = window.AudioContext || window.webkitAudioContext;
-      ctx = new AudioCtx();
-
-      masterGain = ctx.createGain();
-      masterGain.gain.setValueAtTime(0.09, ctx.currentTime);
-      masterGain.connect(ctx.destination);
-    }
-
-    function playDreamyChord() {
-      if (!ctx || !isPlaying) return;
-
-      const chord = chords[chordIndex];
-      chordIndex = (chordIndex + 1) % chords.length;
-
-      chord.forEach((freq, i) => {
-        const osc = ctx.createOscillator();
-        const noteGain = ctx.createGain();
-        const filter = ctx.createBiquadFilter();
-
-        osc.type = i === 0 ? 'triangle' : 'sine';
-        osc.frequency.setValueAtTime(freq, ctx.currentTime);
-
-        // Warm twilight lowpass filter
-        filter.type = 'lowpass';
-        filter.frequency.setValueAtTime(520 + (i * 70), ctx.currentTime);
-
-        // Lush dreamy envelope
-        const now = ctx.currentTime;
-        noteGain.gain.setValueAtTime(0, now);
-        noteGain.gain.linearRampToValueAtTime(0.035, now + 3.0);
-        noteGain.gain.exponentialRampToValueAtTime(0.0001, now + 8.5);
-
-        osc.connect(filter);
-        filter.connect(noteGain);
-        noteGain.connect(masterGain);
-
-        osc.start(now);
-        osc.stop(now + 8.8);
-      });
-
-      loopTimeout = setTimeout(playDreamyChord, 5600);
-    }
-
-    function playStarlightChimes() {
-      if (!ctx || !isPlaying) return;
-
-      const freq = sparkleNotes[Math.floor(Math.random() * sparkleNotes.length)];
-      const osc = ctx.createOscillator();
-      const gain = ctx.createGain();
-
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(freq, ctx.currentTime);
-
-      const now = ctx.currentTime;
-      gain.gain.setValueAtTime(0.001, now);
-      gain.gain.linearRampToValueAtTime(0.012, now + 0.1);
-      gain.gain.exponentialRampToValueAtTime(0.00001, now + 3.2);
-
-      osc.connect(gain);
-      gain.connect(masterGain);
-
-      osc.start(now);
-      osc.stop(now + 3.4);
-
-      chimeTimeout = setTimeout(playStarlightChimes, 1400 + Math.random() * 2200);
-    }
-
-    function start() {
-      init();
-      if (ctx.state === 'suspended') {
-        ctx.resume();
-      }
-      if (isPlaying) return;
-      isPlaying = true;
-
-      const btn = document.getElementById('music-toggle');
-      if (btn) btn.classList.add('playing');
-      const text = document.getElementById('music-status-text');
-      if (text) text.textContent = 'Music On';
-
-      playDreamyChord();
-      playStarlightChimes();
-    }
-
-    function stop() {
-      isPlaying = false;
-      clearTimeout(loopTimeout);
-      clearTimeout(chimeTimeout);
-      const btn = document.getElementById('music-toggle');
-      if (btn) btn.classList.remove('playing');
-      const text = document.getElementById('music-status-text');
-      if (text) text.textContent = 'Play Music';
-    }
-
-    function toggle() {
-      if (isPlaying) {
-        stop();
-      } else {
-        start();
-      }
-    }
-
-    function playDramaticSwell() {
-      if (!ctx) init();
-      if (ctx.state === 'suspended') ctx.resume();
-
-      // Deep cinematic dramatic swell (Hans Zimmer style brass drone)
-      const rootFreqs = [55.00, 110.00, 164.81, 220.00]; // A1, A2, E3, A3
-      const now = ctx.currentTime;
-
-      rootFreqs.forEach(f => {
-        const osc = ctx.createOscillator();
-        const g = ctx.createGain();
-        const ftr = ctx.createBiquadFilter();
-
-        osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(f, now);
-
-        ftr.type = 'lowpass';
-        ftr.frequency.setValueAtTime(150, now);
-        ftr.frequency.exponentialRampToValueAtTime(750, now + 1.2);
-        ftr.frequency.exponentialRampToValueAtTime(180, now + 4.5);
-
-        g.gain.setValueAtTime(0.001, now);
-        g.gain.linearRampToValueAtTime(0.06, now + 1.2);
-        g.gain.exponentialRampToValueAtTime(0.0001, now + 4.8);
-
-        osc.connect(ftr);
-        ftr.connect(g);
-        g.connect(masterGain);
-
-        osc.start(now);
-        osc.stop(now + 5.0);
-      });
-    }
-
-    return { start, stop, toggle, playDramaticSwell };
-  })();
-
-  // Toggle button
-  const musicToggle = document.getElementById('music-toggle');
-  if (musicToggle) {
-    musicToggle.addEventListener('click', (e) => {
-      e.stopPropagation();
-      ambientAudio.toggle();
-    });
-  }
-
-  // Autoplay music on her very first tap anywhere on the screen
-  let userInteracted = false;
-  function triggerAudioOnFirstTap() {
-    if (!userInteracted) {
-      userInteracted = true;
-      ambientAudio.start();
-      window.removeEventListener('click', triggerAudioOnFirstTap);
-      window.removeEventListener('touchstart', triggerAudioOnFirstTap);
-    }
-  }
-  window.addEventListener('click', triggerAudioOnFirstTap, { passive: true });
-  window.addEventListener('touchstart', triggerAudioOnFirstTap, { passive: true });
-
-  // --------------------------------------------------------------------------
-  // 2. SCENE TRANSITIONS
+  // 1. SCENE TRANSITIONS
   // --------------------------------------------------------------------------
   let currentScene = 1;
   const scenes = {
@@ -230,7 +45,6 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   document.getElementById('btn-to-schedule')?.addEventListener('click', () => {
-    ambientAudio.start();
     goToScene(2);
   });
 
@@ -387,8 +201,7 @@ document.addEventListener('DOMContentLoaded', () => {
         setTimeout(() => flash.classList.remove('active'), 500);
       }
 
-      // Dramatic Audio Swell & Confetti
-      ambientAudio.playDramaticSwell();
+      // Dramatic Confetti Burst
       launchConfetti();
 
       // Dispatch Notifications
@@ -497,7 +310,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // --------------------------------------------------------------------------
-  // 6. MESMERISING CANVAS PARTICLES (Floating Fireflies & Stars)
+  // 6. HIGH-PERFORMANCE TWILIGHT CANVAS PARTICLES (Zero GC Stutter)
   // --------------------------------------------------------------------------
   const skyCanvas = document.getElementById('canvas-sky');
   if (skyCanvas) {
@@ -508,72 +321,74 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('resize', () => {
       width = skyCanvas.width = window.innerWidth;
       height = skyCanvas.height = window.innerHeight;
-    });
+    }, { passive: true });
 
     const particles = [];
-    // Soft fireflies + stars
-    for (let i = 0; i < 40; i++) {
+    // Lightweight stars
+    for (let i = 0; i < 22; i++) {
       particles.push({
         type: 'star',
         x: Math.random() * width,
         y: Math.random() * height * 0.7,
-        r: Math.random() * 1.4 + 0.4,
+        r: Math.random() * 1.3 + 0.5,
         alpha: Math.random(),
-        delta: (Math.random() * 0.02 + 0.006)
+        delta: (Math.random() * 0.015 + 0.005)
       });
     }
 
-    for (let i = 0; i < 20; i++) {
+    // Lightweight fireflies
+    for (let i = 0; i < 8; i++) {
       particles.push({
         type: 'firefly',
         x: Math.random() * width,
         y: Math.random() * height,
-        r: Math.random() * 2.5 + 1.2,
-        vx: (Math.random() - 0.5) * 0.5,
-        vy: -(Math.random() * 0.4 + 0.2),
-        alpha: Math.random() * 0.8 + 0.2,
-        hue: Math.random() > 0.5 ? 25 : 40
+        r: Math.random() * 2 + 1.2,
+        vx: (Math.random() - 0.5) * 0.4,
+        vy: -(Math.random() * 0.3 + 0.2),
+        alpha: Math.random() * 0.7 + 0.3,
+        color: Math.random() > 0.5 ? '252, 163, 105' : '255, 117, 85'
       });
     }
 
-    // Dramatic shooting star
+    // High performance shooting star
     let shootingStar = null;
     function spawnShootingStar() {
       shootingStar = {
         x: Math.random() * width * 0.7,
-        y: Math.random() * (height * 0.35),
-        length: Math.random() * 80 + 50,
-        speed: Math.random() * 8 + 9,
+        y: Math.random() * (height * 0.3),
+        length: 65,
+        speed: 10,
         alpha: 1,
-        angle: Math.PI / 4 + (Math.random() - 0.5) * 0.2
+        angle: Math.PI / 4
       };
-      setTimeout(spawnShootingStar, 5000 + Math.random() * 6000);
+      setTimeout(spawnShootingStar, 6000 + Math.random() * 6000);
     }
-    setTimeout(spawnShootingStar, 2500);
+    setTimeout(spawnShootingStar, 3000);
 
     function renderSky() {
       ctx.clearRect(0, 0, width, height);
 
       // Render shooting star
       if (shootingStar) {
-        ctx.save();
         ctx.strokeStyle = `rgba(255, 235, 180, ${shootingStar.alpha})`;
-        ctx.lineWidth = 1.8;
+        ctx.lineWidth = 1.6;
         ctx.beginPath();
         ctx.moveTo(shootingStar.x, shootingStar.y);
-        const tailX = shootingStar.x - Math.cos(shootingStar.angle) * shootingStar.length;
-        const tailY = shootingStar.y - Math.sin(shootingStar.angle) * shootingStar.length;
-        ctx.lineTo(tailX, tailY);
+        ctx.lineTo(
+          shootingStar.x - Math.cos(shootingStar.angle) * shootingStar.length,
+          shootingStar.y - Math.sin(shootingStar.angle) * shootingStar.length
+        );
         ctx.stroke();
-        ctx.restore();
 
         shootingStar.x += Math.cos(shootingStar.angle) * shootingStar.speed;
         shootingStar.y += Math.sin(shootingStar.angle) * shootingStar.speed;
-        shootingStar.alpha -= 0.022;
+        shootingStar.alpha -= 0.024;
         if (shootingStar.alpha <= 0) shootingStar = null;
       }
 
-      particles.forEach(p => {
+      // Fast render loop (No radial gradients allocated on heap)
+      for (let i = 0; i < particles.length; i++) {
+        const p = particles[i];
         if (p.type === 'star') {
           p.alpha += p.delta;
           if (p.alpha > 0.95 || p.alpha < 0.1) p.delta = -p.delta;
@@ -589,16 +404,18 @@ document.addEventListener('DOMContentLoaded', () => {
           if (p.x < -10) p.x = width + 10;
           if (p.x > width + 10) p.x = -10;
 
-          const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 2.2);
-          grad.addColorStop(0, `hsla(${p.hue}, 95%, 72%, ${p.alpha})`);
-          grad.addColorStop(1, `hsla(${p.hue}, 95%, 55%, 0)`);
-
-          ctx.fillStyle = grad;
+          // Zero-allocation soft glow
+          ctx.fillStyle = `rgba(${p.color}, ${p.alpha * 0.25})`;
           ctx.beginPath();
-          ctx.arc(p.x, p.y, p.r * 2.2, 0, Math.PI * 2);
+          ctx.arc(p.x, p.y, p.r * 2.5, 0, Math.PI * 2);
+          ctx.fill();
+
+          ctx.fillStyle = `rgba(${p.color}, ${p.alpha})`;
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
           ctx.fill();
         }
-      });
+      }
 
       requestAnimationFrame(renderSky);
     }
