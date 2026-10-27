@@ -1,27 +1,22 @@
 @echo off
-title Push Evening Walk Website to GitHub
+title Push Evening Walk to GitHub
 cd /d "%~dp0"
 echo ========================================================
-echo  Deploy Evening Walk Website to GitHub for Vercel
+echo  Pushing to https://github.com/Ankur1212s/evwlk.git
 echo ========================================================
 echo.
-set /p REPO_URL="https://github.com/Ankur1212s/evwlk.git"
-
-if "%REPO_URL%"=="" (
-    echo No URL entered. Exiting.
-    pause
-    exit /b
-)
-
-git remote remove origin 2>nul
-git remote add origin %REPO_URL%
-git branch -M main
+echo If a GitHub login window or browser tab appears, 
+echo click "Sign in with your browser" or "Authorize".
+echo.
 git push -u origin main
-
 echo.
-echo ========================================================
-echo  Code pushed to GitHub successfully!
-echo  Now go to https://vercel.com/new and click Import!
-echo ========================================================
+if %ERRORLEVEL% EQU 0 (
+    echo ========================================================
+    echo  [SUCCESS] Code is uploaded to GitHub!
+    echo  Now go to https://vercel.com/new and click Import!
+    echo ========================================================
+) else (
+    echo.
+    echo Push could not complete. Check chat for 1-click alternative!
+)
 pause
-
