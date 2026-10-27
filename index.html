@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>An Evening Walk? 🌇</title>
+  <meta name="description" content="A friendly invitation for an evening walk.">
+  <meta property="og:title" content="An Evening Walk? 🌇">
+  <meta property="og:description" content="Catching up under the evening sky, just as good friends.">
+
+  <!-- Google Fonts: Elegant Serif + Clean Modern Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Mesmerising Atmospheric Sky & Dramatic Vignette -->
+  <canvas id="canvas-sky"></canvas>
+  <div class="aurora-mesh"></div>
+  <div class="cinema-vignette"></div>
+  <div class="film-grain"></div>
+  <div id="flash-overlay"></div>
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- Ambient Music Equalizer Button -->
+  <div class="audio-dock">
+    <button id="music-toggle" class="music-btn" title="Toggle Twilight Ambient Soundscape" aria-label="Toggle Sound">
+      <span class="eq-bars">
+        <span class="eq-bar"></span>
+        <span class="eq-bar"></span>
+        <span class="eq-bar"></span>
+      </span>
+      <span id="music-status-text">Play Score</span>
+    </button>
+  </div>
+
+  <div class="app-wrapper">
+
+    <!-- ================================================================= -->
+    <!-- SCENE 1: THE DRAMATIC INVITATION -->
+    <!-- ================================================================= -->
+    <section id="scene-intro" class="scene active">
+      <div class="glass-card">
+        <div class="lens-flare"></div>
+
+        <!-- Scenic sunset view -->
+        <div class="scenic-view">
+          <div class="scenic-sun"></div>
+          <svg class="scenic-trees" viewBox="0 0 600 60" preserveAspectRatio="none">
+            <path d="M0 60 L0 35 Q 40 15 80 40 Q 130 55 180 30 Q 240 10 300 35 Q 360 55 420 25 Q 490 10 550 35 L600 45 L600 60 Z"></path>
+          </svg>
+        </div>
+
+        <span class="badge-label">⚡ INVITATION PROTOCOL • TOP PRIORITY</span>
+        <h1 class="headline" style="font-size: 2rem;">A Break From The Chaos.</h1>
+        
+        <p class="dramatic-quote">
+          "The world is moving at 1,000 miles an hour... but some evenings demand that we hit pause."
+        </p>
+
+        <p id="friendly-message-text" class="friendly-sub">
+          Life's been busy, and I thought it'd be nice to catch up and take a peaceful evening walk to clear our heads—just as good friends. No pressure, no awkwardness, just fresh air and an easy stroll.
+        </p>
+
+        <!-- 3 Friendly Highlights -->
+        <div class="highlights-list">
+          <div class="highlight-item">
+            <span class="highlight-icon">🌇</span>
+            <div class="highlight-text">
+              <h4>Golden Hour Breeze</h4>
+              <p>Escaping all screens and digital noise.</p>
+            </div>
+          </div>
+          <div class="highlight-item">
+            <span class="highlight-icon">💬</span>
+            <div class="highlight-text">
+              <h4>Unfiltered Catch-up</h4>
+              <p>Genuine life updates and zero expectations.</p>
+            </div>
+          </div>
+          <div class="highlight-item">
+            <span class="highlight-icon">⏳</span>
+            <div class="highlight-text">
+              <h4>Zero Stress</h4>
+              <p>Even 20–30 minutes to reset our minds.</p>
+            </div>
+          </div>
+        </div>
+
+        <button id="btn-to-schedule" class="primary-btn">
+          <span>Unseal Schedule ⚡</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- SCENE 2: TIMING & RESPONSE -->
+    <!-- ================================================================= -->
+    <section id="scene-schedule" class="scene">
+      <div class="glass-card">
+        <div class="lens-flare"></div>
+        <span class="badge-label">COORDINATES & TIME</span>
+        <h2 class="headline" style="font-size: 1.7rem;">Set The Rendezvous</h2>
+        <p class="friendly-sub" style="margin-bottom: 14px;">
+          Select the exact date and hour of departure:
+        </p>
+
+        <!-- Quick 1-Tap Presets -->
+        <div class="preset-chips">
+          <div class="preset-chip active" id="chip-tomorrow">Tomorrow (6:30 PM)</div>
+          <div class="preset-chip" id="chip-this-weekend">This Weekend (6:00 PM)</div>
+          <div class="preset-chip" id="chip-next-week">Next Week</div>
+        </div>
+
+        <!-- Custom Date & Time Inputs -->
+        <div class="datetime-row">
+          <div class="input-group">
+            <label for="walk-date" class="input-label">📅 Date</label>
+            <input type="date" id="walk-date" class="datetime-field" required>
+          </div>
+          <div class="input-group">
+            <label for="walk-time" class="input-label">⏰ Time</label>
+            <input type="time" id="walk-time" class="datetime-field" value="18:30" required>
+          </div>
+        </div>
+
+        <!-- Optional Spot / Note -->
+        <div class="input-group" style="margin-bottom: 16px;">
+          <label for="preferred-spot-input" class="input-label">📍 Target Spot / Note (Optional)</label>
+          <input id="preferred-spot-input" type="text" class="custom-input" placeholder="e.g. The quiet park, lake, or your choice!">
+        </div>
+
+        <!-- Action Buttons (Mobile-first) -->
+        <div class="btn-col">
+          <button id="btn-accept" class="primary-btn">
+            <span>Lock In Sunset 🌇</span>
+          </button>
+          <button id="btn-dodge" class="dodge-btn">
+            <span>Decline Mission</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================================================================= -->
+    <!-- SCENE 3: CONFIRMED & WALK PASS -->
+    <!-- ================================================================= -->
+    <section id="scene-confirmed" class="scene">
+      <div class="glass-card">
+        <div class="lens-flare"></div>
+        <div class="stamp-seal" id="stamp-seal">RATIFIED ✓</div>
+
+        <span class="badge-label" style="background: rgba(46, 213, 115, 0.15); border-color: rgba(46, 213, 115, 0.3); color: #2ed573;">
+          ✓ MISSION RATIFIED & DISPATCHED
+        </span>
+
+        <h2 class="headline" style="font-size: 1.85rem;">It Is Decided. ✨</h2>
+        <p class="friendly-sub" style="margin-bottom: 14px;">
+          The sunset awaits. Here is your official boarding pass:
+        </p>
+
+        <!-- Sleek Boarding Pass -->
+        <div class="walk-pass">
+          <div class="pass-header">
+            <span class="pass-label">OFFICIAL WALK PASS • PROTOCOL FRIENDSHIP</span>
+            <span>🌇</span>
+          </div>
+
+          <div class="pass-row">
+            <span class="pass-key">Guest:</span>
+            <span class="pass-val val-recipient">Hey</span>
+          </div>
+          <div class="pass-row">
+            <span class="pass-key">Companion:</span>
+            <span class="pass-val val-sender">Your Friend</span>
+          </div>
+          <div class="pass-row">
+            <span class="pass-key">Departure:</span>
+            <span id="pass-time" class="pass-val">Tomorrow Evening (~6:30 PM)</span>
+          </div>
+          <div id="pass-note-row" class="pass-row" style="display: none; border-top: 1px dashed rgba(255,255,255,0.08); padding-top: 8px; margin-top: 8px;">
+            <span class="pass-key">Briefing Note:</span>
+            <span id="pass-note-val" class="pass-val" style="font-style: italic;">""</span>
+          </div>
+        </div>
+
+        <p class="friendly-sub" style="font-size: 0.86rem; color: var(--text-muted); margin-bottom: 18px;">
+          Confirmation broadcast sent to <span class="val-sender">your friend</span>. See you under the evening sky!
+        </p>
+
+        <!-- Direct WhatsApp button if configured -->
+        <a id="btn-whatsapp" class="primary-btn" style="display: none; background: #25D366; color: #fff; box-shadow: 0 6px 20px rgba(37, 211, 102, 0.35); text-decoration: none;">
+          <span>Transmit WhatsApp Dispatch 💬</span>
+        </a>
+      </div>
+    </section>
+
+  </div>
+
+  <script src="config.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
