@@ -5,7 +5,7 @@ echo ========================================================
 echo  Deploy Evening Walk Website to GitHub for Vercel
 echo ========================================================
 echo.
-set /p REPO_URL="Enter your GitHub Repository URL (e.g. https://github.com/yourname/evening-walk.git): "
+set /p REPO_URL="https://github.com/Ankur1212s/evwlk.git"
 
 if "%REPO_URL%"=="" (
     echo No URL entered. Exiting.
@@ -24,3 +24,4 @@ echo  Code pushed to GitHub successfully!
 echo  Now go to https://vercel.com/new and click Import!
 echo ========================================================
 pause
+
